@@ -42,6 +42,7 @@
          tabPosition="1" 
          extensions="*:1" 
          showScopeSection="true"
+         canSearchEnclosingProjects="true"
          class="org.gavinFitzgerald.synonym.plugin.page.SynonymSearchPage">
       </page> 
    </extension> 
