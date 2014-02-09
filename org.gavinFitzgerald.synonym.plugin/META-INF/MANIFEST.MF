@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.gavinFitzgerald.synonym.plugin
 Bundle-SymbolicName: org.gavinFitzgerald.synonym.plugin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.gavinFitzgerald.synonym.plugin.Activator
+Bundle-Activator: org.gavinFitzgerald.synonym.plugin.validator.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views;bundle-version="3.6.100"

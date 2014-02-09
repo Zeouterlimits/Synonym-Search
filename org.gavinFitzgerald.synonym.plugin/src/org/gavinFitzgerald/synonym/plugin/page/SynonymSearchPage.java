@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.resource.JFaceColors;
@@ -56,6 +57,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,6 +65,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkingSet;
@@ -71,6 +74,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.gavinFitzgerald.synonym.plugin.external.api.SearchAPI;
+import org.gavinFitzgerald.synonym.plugin.validator.InputValidator;
 
 //TextSearchPage 
 public class SynonymSearchPage extends DialogPage implements ISearchPage  //TextSearchPage
@@ -882,8 +886,34 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 				//ArrayList<String> synonyms = (ArrayList<String>) SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
 				List<String> synonyms = SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
 				
+				InputDialog dialog =  new InputDialog(getShell(), "Selection", "Choose your inputs", "tester", new InputValidator()); 
+				
+				//(getShell(), SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
+				//dialog.setText("My info");
+				//dialog.setMessage("Do you really want to do this?");
+
+				// open dialog and await user selection
+				//int returnCode = dialog.open(); 
+				
 				for(String synonym : synonyms) {
-					NewSearchUI.runQueryInBackground(newQuery(synonym));
+					Button button = new Button(getShell(), SWT.CHECK);
+					button.setText(synonym);
+					
+					Display display = Display.getCurrent();
+			        Shell shell = new Shell(display);
+			        	
+			        // the layout manager handle the layout
+			        // of the widgets in the container
+			        shell.setLayout(new FillLayout());
+			        
+			        //TODO add some widgets to the Shell
+			        shell.open();
+			        while (!shell.isDisposed()) {
+			            if (!display.readAndDispatch())
+			                display.sleep();
+			        }
+			        display.dispose();
+					//NewSearchUI.runQueryInBackground(newQuery(synonym));
 				}
 				
 				
@@ -894,7 +924,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 //				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 //						Messages.TaskSearchPage_Task_Search, Messages.TaskSearchPage_No_task_found_matching_key_ + key);
 					
-					MessageDialog.openInformation(null, "Hello", "You Searched for: " + initialSearchTerm);
+					MessageDialog.openInformation(getShell(), "Hello", "You Searched for: " + initialSearchTerm);
 				} else {
 					//TODO: Show no synonyms found screen ?
 				}

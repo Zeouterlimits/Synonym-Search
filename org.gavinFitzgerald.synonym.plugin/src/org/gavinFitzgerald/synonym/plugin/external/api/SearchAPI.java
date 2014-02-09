@@ -2,7 +2,6 @@ package org.gavinFitzgerald.synonym.plugin.external.api;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.HttpResponseException;
@@ -24,9 +23,7 @@ public class SearchAPI {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		Gson gson = new Gson();
 		Responses response = null;
-		
-		//ObjectMapper mapper = new ObjectMapper();
-		
+		int count = 1;
 		try {
 			getRequest = new AlterVistaGet();
 			getRequest.setSearchTerm(initialSearchTerm);
@@ -42,7 +39,9 @@ public class SearchAPI {
             //ArrayList<String> words = (ArrayList<String>) response.response.get(0).list.getListSynoynms();
             List<String> strings = response.response.get(0).list.getListSynoynms();
             
+            System.out.println("Count: " + count);
             System.out.println(responseBody);
+            count++;
 
 		} catch (URISyntaxException e) {
 			e.printStackTrace();

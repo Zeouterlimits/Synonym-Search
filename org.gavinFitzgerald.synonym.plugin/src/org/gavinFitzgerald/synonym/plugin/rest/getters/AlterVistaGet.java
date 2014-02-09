@@ -7,10 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 public class AlterVistaGet extends Get {
 	

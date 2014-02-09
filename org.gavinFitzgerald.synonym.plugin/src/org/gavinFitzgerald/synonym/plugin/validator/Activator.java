@@ -1,4 +1,4 @@
-package org.gavinFitzgerald.synonym.plugin;
+package org.gavinFitzgerald.synonym.plugin.validator;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
