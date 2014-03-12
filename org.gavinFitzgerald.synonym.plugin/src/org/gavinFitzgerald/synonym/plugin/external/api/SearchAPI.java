@@ -37,7 +37,7 @@ public class SearchAPI {
             response = gson.fromJson(responseBody, Responses.class);
             
             //ArrayList<String> words = (ArrayList<String>) response.response.get(0).list.getListSynoynms();
-            List<String> strings = response.response.get(0).list.getListSynoynms();
+            List<String> synonyms = response.response.get(0).list.getListSynoynms();
             
             System.out.println("Count: " + count);
             System.out.println(responseBody);

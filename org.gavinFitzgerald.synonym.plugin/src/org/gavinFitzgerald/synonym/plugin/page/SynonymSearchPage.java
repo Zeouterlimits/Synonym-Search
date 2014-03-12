@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.resource.JFaceColors;
@@ -57,7 +56,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -65,7 +63,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkingSet;
@@ -73,14 +70,17 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.gavinFitzgerald.synonym.plugin.dialog.SearchTemSelectionWindow;
+import org.gavinFitzgerald.synonym.plugin.dialog.SearchTermDialog;
 import org.gavinFitzgerald.synonym.plugin.external.api.SearchAPI;
-import org.gavinFitzgerald.synonym.plugin.validator.InputValidator;
+import org.gavinFitzgerald.synonym.plugin.search.SynonymSearchUI;
 
 //TextSearchPage 
 public class SynonymSearchPage extends DialogPage implements ISearchPage  //TextSearchPage
 {
 	
 	public static final String ID = "org.gavinFitzgerald.synonym.plugin.page.SynonymSearchPage";
+	private static final String SEARCH_TERM_SEPARATOR = "|";
 
 	protected Combo searchText;
 	protected Combo extensions;
@@ -260,16 +260,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		TextSearchPageInput input= new TextSearchPageInput(synonym, data.isCaseSensitive, data.isRegExSearch, data.isWholeWord && !data.isRegExSearch, createTextSearchScope());
 		return TextSearchQueryProvider.getPreferred().createQuery(input);
 	}
-
-//	public boolean performAction() {
-//		try {
-//			NewSearchUI.runQueryInBackground(newQuery());
-//		} catch (CoreException e) {
-//			ErrorDialog.openError(getShell(), SearchMessages.TextSearchPage_replace_searchproblems_title, SearchMessages.TextSearchPage_replace_searchproblems_message, e.getStatus());
-//			return false;
-//		}
-// 		return true;
-//	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.search.ui.IReplacePage#performReplace()
@@ -886,45 +876,55 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 				//ArrayList<String> synonyms = (ArrayList<String>) SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
 				List<String> synonyms = SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
 				
-				InputDialog dialog =  new InputDialog(getShell(), "Selection", "Choose your inputs", "tester", new InputValidator()); 
+				//InputDialog dialog =  new InputDialog(getShell(), "Selection", "Choose your inputs", "tester", new InputValidator()); 
 				
-				//(getShell(), SWT.ICON_QUESTION | SWT.OK| SWT.CANCEL);
-				//dialog.setText("My info");
-				//dialog.setMessage("Do you really want to do this?");
-
-				// open dialog and await user selection
-				//int returnCode = dialog.open(); 
+				//SearchTemSelectionWindow.createSearchSelectionWindow(synonyms);
 				
-				for(String synonym : synonyms) {
-					Button button = new Button(getShell(), SWT.CHECK);
-					button.setText(synonym);
+				SearchTermDialog dialog = new SearchTermDialog(Display.getCurrent().getActiveShell());
+			    dialog.setInputSynonyms(synonyms);
+			    dialog.open();
+			    
+			    List<String> selectedSynonyms = dialog.getSelectedSynonyms();
+			    
+			    SynonymSearchUI searchUI = new SynonymSearchUI();
+			    
+			    StringBuilder selectedSynonymBuilder = new StringBuilder();
+				
+				for(String synonym : selectedSynonyms) {
 					
-					Display display = Display.getCurrent();
-			        Shell shell = new Shell(display);
-			        	
-			        // the layout manager handle the layout
-			        // of the widgets in the container
-			        shell.setLayout(new FillLayout());
-			        
-			        //TODO add some widgets to the Shell
-			        shell.open();
-			        while (!shell.isDisposed()) {
-			            if (!display.readAndDispatch())
-			                display.sleep();
-			        }
-			        display.dispose();
+					selectedSynonymBuilder.append(synonym); 
+					selectedSynonymBuilder.append(SEARCH_TERM_SEPARATOR);
+//					Button button = new Button(getShell(), SWT.CHECK);
+//					button.setText(synonym);
+//					
+//					Display display = Display.getCurrent();
+//			        Shell shell = new Shell(display);
+//			        	
+//			        // the layout manager handle the layout
+//			        // of the widgets in the container
+//			        shell.setLayout(new FillLayout());
+//			        
+//			        //TODO add some widgets to the Shell
+//			        shell.open();
+//			        while (!shell.isDisposed()) {
+//			            if (!display.readAndDispatch())
+//			                display.sleep();
+//			        }
+//			        display.dispose();
 					//NewSearchUI.runQueryInBackground(newQuery(synonym));
 				}
 				
+				String selectedSynynoms = selectedSynonymBuilder.toString();
 				
-				//SearchPatternData data= getPatternData();
-				//TextSearchPageInput input= new TextSearchPageInput(data.textPattern, data.isCaseSensitive, data.isRegExSearch, data.isWholeWord && !data.isRegExSearch, createTextSearchScope());
-				//return TextSearchQueryProvider.getPreferred().createQuery(input);
-				if (synonyms.size() > 0) {
-//				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-//						Messages.TaskSearchPage_Task_Search, Messages.TaskSearchPage_No_task_found_matching_key_ + key);
-					
-					MessageDialog.openInformation(getShell(), "Hello", "You Searched for: " + initialSearchTerm);
+				SearchPatternData data= getPatternData();
+				TextSearchPageInput input= new TextSearchPageInput(selectedSynynoms, data.isCaseSensitive, data.isRegExSearch, data.isWholeWord && !data.isRegExSearch, createTextSearchScope());
+				ISearchQuery query = TextSearchQueryProvider.getPreferred().createQuery(input);
+				NewSearchUI.runQueryInBackground(query);
+				
+				//return 
+				
+				if (selectedSynonyms.size() > 0) {
+					MessageDialog.openInformation(getShell(), "Hello", "You Searched for: " + selectedSynonyms.toString());
 				} else {
 					//TODO: Show no synonyms found screen ?
 				}
@@ -937,8 +937,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		}
  		return true;
 	}
-
-	
 	
 
 	private ISearchPageContainer getContainer() {

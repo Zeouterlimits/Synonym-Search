@@ -1,30 +1,36 @@
 package org.gavinFitzgerald.synonym.plugin.dialog;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class SearchTermInput extends ApplicationWindow {
+public class SearchTemSelectionWindow extends ApplicationWindow {
+	
+	private List<String> inputSynonyms;
+	
+	private SearchTermDialog dialog;
 
-	public SearchTermInput() {
+	public SearchTemSelectionWindow() {
 		super(null);
 	}
 	
-	public SearchTermInput(Shell parentShell) {
+	public SearchTemSelectionWindow(Shell parentShell) {
 		super(parentShell);
 	}
 	
+	public SearchTemSelectionWindow(List<String> synonyms) {
+		super(null);
+		
+		this.inputSynonyms = synonyms;
+	}
+
 	/**
 	   * Runs the application
 	   */
@@ -62,16 +68,22 @@ public class SearchTermInput extends ApplicationWindow {
 	    composite.setLayout(new GridLayout(1, false));
 
 	    // Create a label to display what the user typed in
-	    final Label label = new Label(composite, SWT.NONE);
-	    label.setText("This will display the user input from InputDialog");
+	    //final Label label = new Label(composite, SWT.NONE);
+	    //label.setText("This will display the user i"nput from InputDialog");
 	    
-	    SearchTermSelectionWindow selectionWindow = new SearchTermSelectionWindow();
-	    Dialog1 dialog = new Dialog1(Display.getCurrent().getActiveShell(),
-	            "", "Enter 5-8 characters", label.getText(), new LengthValidator(), null);
+	  //  SearchTermSelectionWindow selectionWindow = new SearchTermSelectionWindow();
+	    
+	    /*
+	    dialog = new SearchTermDialog(Display.getCurrent().getActiveShell(),
+	            "", "Choose the desired synonyms", "", new LengthValidator());
+	    dialog.setSynonyms(inputSynonyms);
 	    dialog.open();
+	    */
+	    
 	    //selectionWindow.getFrame().setVisible(true);
 	    
 	    // Create the button to launch the error dialog
+	    /*
 	    Button show = new Button(composite, SWT.PUSH);
 	    show.setText("Get Input");
 	    show.addSelectionListener(new SelectionAdapter() {
@@ -84,7 +96,7 @@ public class SearchTermInput extends ApplicationWindow {
 	        }
 	      }
 	    });
-
+		*/
 	    parent.pack();
 	    return composite;
 	  }
@@ -95,9 +107,16 @@ public class SearchTermInput extends ApplicationWindow {
 	   * @param args the command line arguments
 	   */
 	  public static void main(String[] args) {
-	    new SearchTermInput().run();
+	    new SearchTemSelectionWindow().run();
 	  }
+
+	public static void createSearchSelectionWindow(List<String> synonyms) {
+		SearchTemSelectionWindow searchTermInput = new SearchTemSelectionWindow(synonyms);
+		searchTermInput.run();
+		
+		System.out.println(searchTermInput.toString());
 	}
+}
 
 	/**
 	 * This class validates a String. It makes sure that the String is between 5 and 8

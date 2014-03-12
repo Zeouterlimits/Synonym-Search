@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ButtonGroup;
 
-public class SearchTermSelectionWindow {
+public class example_windows {
 
 	private JFrame frame;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -24,7 +24,7 @@ public class SearchTermSelectionWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchTermSelectionWindow window = new SearchTermSelectionWindow();
+					example_windows window = new example_windows();
 					window.getFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +36,7 @@ public class SearchTermSelectionWindow {
 	/**
 	 * Create the application.
 	 */
-	public SearchTermSelectionWindow() {
+	public example_windows() {
 		initialize();
 	}
 
