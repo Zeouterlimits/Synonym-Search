@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -157,6 +158,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 			this.fileNamePatterns= fileNamePatterns;
 			this.scope= scope;
 			this.workingSets= workingSets; // can be null
+			
 		}
 
 		public void store(IDialogSettings settings) {
@@ -388,6 +390,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		if (match != null) {
 			fPreviousSearchPatterns.remove(match);
 		}
+		
 		match = new SearchPatternData(
 					getPattern(),
 					isCaseSensitive(),
@@ -428,19 +431,14 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		return fIsCaseSensitiveCheckbox.getSelection();
 	}
 
-	/*
-	 * Implements method from IDialogPage
-	 */
 	public void setVisible(boolean visible) {
 		if (visible && searchText != null) {
 			if (firstTime) {
 				firstTime= false;
-				// Set item and text here to prevent page from resizing
+				
 				searchText.setItems(getPreviousSearchPatterns());
 				fExtensions.setItems(fPreviousExtensions);
-//				if (fExtensions.getItemCount() == 0) {
-//					loadFilePatternDefaults();
-//				}
+				
 				if (!initializePatternControl()) {
 					searchText.select(0);
 					fExtensions.setText("*"); //$NON-NLS-1$
@@ -564,7 +562,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		// RegEx checkbox
 		fIsRegExCheckbox= new Button(group, SWT.CHECK);
 		fIsRegExCheckbox.setText(SearchMessages.SearchPage_regularExpression);
-		fIsRegExCheckbox.setSelection(fIsRegExSearch);
 
 		fIsRegExCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -579,6 +576,11 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		fIsRegExCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 2));
 		fIsRegExCheckbox.setFont(group.getFont());
 
+		fIsRegExCheckbox.setEnabled(false);
+		fIsRegExCheckbox.setVisible(false);
+		fIsRegExCheckbox.setSelection(true);
+		
+		
 		// Text line which explains the special characters
 		fStatusLabel= new CLabel(group, SWT.LEAD);
 		fStatusLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2));
@@ -598,6 +600,8 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		});
 		fIsWholeWordCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		fIsWholeWordCheckbox.setFont(group.getFont());
+		
+		//searchText.setText("");
 	}
 
 	private void handleWidgetSelected() {
@@ -610,7 +614,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 			return;
 		fIsCaseSensitiveCheckbox.setSelection(patternData.isCaseSensitive);
 		fIsRegExSearch= patternData.isRegExSearch;
-		fIsRegExCheckbox.setSelection(fIsRegExSearch);
+		fIsRegExCheckbox.setSelection(true);
 		fIsWholeWord= patternData.isWholeWord;
 		fIsWholeWordCheckbox.setSelection(fIsWholeWord);
 		fIsWholeWordCheckbox.setEnabled(!fIsRegExSearch);
@@ -648,14 +652,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		}
 		return false;
 	}
-
-//	private void loadFilePatternDefaults() {
-//		SearchMatchInformationProviderRegistry registry= SearchPlugin.getDefault().getSearchMatchInformationProviderRegistry();
-//		String[] defaults= registry.getDefaultFilePatterns();
-//		fExtensions.setItems(defaults);
-//		fExtensions.setText(defaults[0]);
-//	}
-
+	
 	private String insertEscapeChars(String text) {
 		if (text == null || text.equals("")) //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
@@ -678,20 +675,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		}
 		return sbOut.toString();
 	}
-
-//	private String getExtensionFromEditor() {
-//		IEditorPart ep= SearchPlugin.getActivePage().getActiveEditor();
-//		if (ep != null) {
-//			Object elem= ep.getEditorInput();
-//			if (elem instanceof IFileEditorInput) {
-//				String extension= ((IFileEditorInput)elem).getFile().getFileExtension();
-//				if (extension == null)
-//					return ((IFileEditorInput)elem).getFile().getName();
-//				return "*." + extension; //$NON-NLS-1$
-//			}
-//		}
-//		return null;
-//	}
 
 	private void addFileNameControls(Composite group) {
 		// grid layout with 2 columns
@@ -750,11 +733,7 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 		this.container = container;
 		this.pageContainer = container;
 	}
-
-//	private ISearchPageContainer getContainer() {
-//		return container;
-//	}
-
+	
 	private ISelection getSelection() {
 		return container.getSelection();
 	}
@@ -866,19 +845,11 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 	public boolean performAction() {
 		try {
 			String initialSearchTerm = searchText.getText();
-			String selectedSynonymRepository = "altavista";//selectedSynonymRepositoryText.getText();
+			String selectedSynonymRepository = "altavista";
 			
-			//if(!StringUtils.isEmpty(initialSearchTerm))
-			
-			if (initialSearchTerm != null && initialSearchTerm.trim().length() > 0) {
+			if (!StringUtils.isBlank(initialSearchTerm)) {
 				initialSearchTerm = initialSearchTerm.trim();
-				
-				//ArrayList<String> synonyms = (ArrayList<String>) SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
 				List<String> synonyms = SearchAPI.getSynonyms(selectedSynonymRepository, initialSearchTerm);
-				
-				//InputDialog dialog =  new InputDialog(getShell(), "Selection", "Choose your inputs", "tester", new InputValidator()); 
-				
-				//SearchTemSelectionWindow.createSearchSelectionWindow(synonyms);
 				
 				SearchTermDialog dialog = new SearchTermDialog(Display.getCurrent().getActiveShell());
 			    dialog.setInputSynonyms(synonyms);
@@ -894,44 +865,29 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 					
 					selectedSynonymBuilder.append(synonym); 
 					selectedSynonymBuilder.append(SEARCH_TERM_SEPARATOR);
-//					Button button = new Button(getShell(), SWT.CHECK);
-//					button.setText(synonym);
-//					
-//					Display display = Display.getCurrent();
-//			        Shell shell = new Shell(display);
-//			        	
-//			        // the layout manager handle the layout
-//			        // of the widgets in the container
-//			        shell.setLayout(new FillLayout());
-//			        
-//			        //TODO add some widgets to the Shell
-//			        shell.open();
-//			        while (!shell.isDisposed()) {
-//			            if (!display.readAndDispatch())
-//			                display.sleep();
-//			        }
-//			        display.dispose();
-					//NewSearchUI.runQueryInBackground(newQuery(synonym));
 				}
+				selectedSynonymBuilder.append(initialSearchTerm);
 				
 				String selectedSynynoms = selectedSynonymBuilder.toString();
-				
 				SearchPatternData data= getPatternData();
-				TextSearchPageInput input= new TextSearchPageInput(selectedSynynoms, data.isCaseSensitive, data.isRegExSearch, data.isWholeWord && !data.isRegExSearch, createTextSearchScope());
+				boolean regExExpression = data.isRegExSearch;
+				
+				if(!regExExpression) throw new RuntimeException("Must be regEx for word separator to work");
+				
+				TextSearchPageInput input= new TextSearchPageInput(selectedSynynoms, data.isCaseSensitive, regExExpression, data.isWholeWord && !regExExpression, createTextSearchScope());
 				ISearchQuery query = TextSearchQueryProvider.getPreferred().createQuery(input);
 				NewSearchUI.runQueryInBackground(query);
 				
 				//return 
 				
 				if (selectedSynonyms.size() > 0) {
-					MessageDialog.openInformation(getShell(), "Hello", "You Searched for: " + selectedSynonyms.toString());
+					MessageDialog.openInformation(getShell(), "Synonym Search", "You Searched for: " + selectedSynonyms.toString());
 				} else {
 					//TODO: Show no synonyms found screen ?
 				}
 				return true;
 			} 
 		} catch (Exception e) {
-			//ErrorDialog.openError(getShell(), Messages.TextSearchPage_replace_searchproblems_title, Messages.TextSearchPage_replace_searchproblems_message, null);
 			e.printStackTrace();
 			return false;
 		}
@@ -942,9 +898,5 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 	private ISearchPageContainer getContainer() {
 		return pageContainer;
 	}
-//
-//	private ISelection getSelection() {
-//		return pageContainer.getSelection();
-//	}
-	
+
 }

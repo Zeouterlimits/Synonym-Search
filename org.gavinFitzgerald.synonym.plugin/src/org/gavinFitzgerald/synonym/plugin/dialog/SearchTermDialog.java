@@ -22,7 +22,6 @@ public class SearchTermDialog extends Dialog {
 	private boolean atLeastOneSelection;
 
 	public SearchTermDialog(Shell parentShell) {
-		//super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
 		super(parentShell);
 		
 		atLeastOneSelection = false;

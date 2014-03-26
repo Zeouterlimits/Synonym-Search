@@ -1,6 +1,6 @@
 package org.gavinFitzgerald.synonym.plugin.rest.entites.altervista;
 
-public class Response {
+public class Category {
 
-	public CategorisedSynonyms list;
+	public Synonyms list;
 }

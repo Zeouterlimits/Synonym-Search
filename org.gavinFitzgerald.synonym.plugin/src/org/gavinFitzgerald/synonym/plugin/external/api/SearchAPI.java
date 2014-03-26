@@ -2,13 +2,15 @@ package org.gavinFitzgerald.synonym.plugin.external.api;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.gavinFitzgerald.synonym.plugin.rest.entites.altervista.Responses;
+import org.gavinFitzgerald.synonym.plugin.rest.entites.altervista.AltervistaResponse;
+import org.gavinFitzgerald.synonym.plugin.rest.entites.altervista.Category;
 import org.gavinFitzgerald.synonym.plugin.rest.getters.AlterVistaGet;
 import org.gavinFitzgerald.synonym.plugin.rest.getters.Get;
 
@@ -22,8 +24,9 @@ public class SearchAPI {
 		Get getRequest;
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		Gson gson = new Gson();
-		Responses response = null;
-		int count = 1;
+		AltervistaResponse altervistaResponse = null;
+		List<String> synonyms = new ArrayList<>();
+		
 		try {
 			getRequest = new AlterVistaGet();
 			getRequest.setSearchTerm(initialSearchTerm);
@@ -34,14 +37,18 @@ public class SearchAPI {
             
             // Body contains your json stirng
             String responseBody = httpClient.execute(getRequest, responseHandler);
-            response = gson.fromJson(responseBody, Responses.class);
+            altervistaResponse = gson.fromJson(responseBody, AltervistaResponse.class);
             
-            //ArrayList<String> words = (ArrayList<String>) response.response.get(0).list.getListSynoynms();
-            List<String> synonyms = response.response.get(0).list.getListSynoynms();
+            /*
+            List<Category> categoriesWithSynonyms = altervistaResponse.categoriesWithSynonyms;
             
-            System.out.println("Count: " + count);
-            System.out.println(responseBody);
-            count++;
+            for(Category categoryOfSynonyms : categoriesWithSynonyms) {
+            	List<String> synonymsPerCategory = categoryOfSynonyms.list.getListSynoynms();
+            	synonyms.addAll(synonymsPerCategory);
+            }
+            */
+            synonyms = altervistaResponse.getPlainSynonyms();
+            //List<String> synonyms = altervistaResponse.response.get(0).list.getListSynoynms();
 
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -55,7 +62,7 @@ public class SearchAPI {
 			httpClient.getConnectionManager().shutdown();
 		}
 		
-		return response.response.get(0).list.getListSynoynms();
+		return synonyms;
 	}
 
 
