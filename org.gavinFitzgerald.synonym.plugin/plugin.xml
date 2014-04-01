@@ -4,34 +4,9 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="search"
+      <category name="search"
             id="org.gavinFitzgerald.synonym.plugin.ui">
       </category>
-   </extension>
-   
-   <extension point="org.eclipse.ui.commands">
-         <command name="Hello"
-         	description="Says Hello World"
-         	id="org.gavinFitzgerald.synonym.plugin.ui.command.hello" />
-   </extension>
-   
-   <extension point="org.eclipse.ui.handlers">
-      <handler
-      		class="org.gavinFitzgerald.synonym.plugin.ui.handlers.HelloHandler"
-            commandId="org.gavinFitzgerald.synonym.plugin.ui.command.hello">
-      </handler>
-   </extension>
-   
-   <extension point="org.eclipse.ui.menus">
-	<menuContribution allPopups="false"
-       locationURI="menu:search?after=additions">
-       <command
-             commandId="org.gavinFitzgerald.synonym.plugin.ui.command.hello"
-             label="Hello"
-             style="push">
-       </command>
-	</menuContribution>
    </extension>
    
    <extension point="org.eclipse.search.searchPages"> 
@@ -43,10 +18,9 @@
          extensions="*:1" 
          showScopeSection="true"
          canSearchEnclosingProjects="true"
+         icon="resources/images/search_logo.gif"
          class="org.gavinFitzgerald.synonym.plugin.page.SynonymSearchPage">
       </page> 
    </extension> 
-
-<!-- icon="icons/full/obj16/tsearch_pref.gif" --> 
 
 </plugin>

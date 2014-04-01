@@ -13,4 +13,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
   <artifactId>org.gavinFitzgerald.synonym.feature</artifactId>
   <packaging>eclipse-feature</packaging>
 
+  <name>Synonym Feature Contaimer</name>
+  <organization>
+  	<name>CSIS</name>
+  </organization>
 </project> 

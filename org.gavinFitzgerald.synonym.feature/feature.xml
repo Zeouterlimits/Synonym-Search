@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.gavinFitzgerald.synonym.feature"
-      label="Feature"
-      version="1.0.0.qualifier">
+      label="Synonym Search Feature"
+      version="1.0.0.qualifier"
+      provider-name="CSIS">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+      This creates another search tab in the Eclipse Search Dialog, where in a user can enter a search term, recieve a list of synonyms, choose from that list and their selected code base(s) will be searched for those terms.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      This is the copyright of the University of Limerick, Ireland. All rights are reserved.
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
-   </license>
+   <url>
+      <update label="Gavin Fitzgerald&apos;s Synonym Search Plugin" url="http://skynet.ie/~zeouter/eclipse/synonym/repository/"/>
+      <discovery label="The Developer&apos;s twitter" url="http://www.twitter.com/Zeouterlimits"/>
+   </url>
 
    <plugin
          id="org.gavinFitzgerald.synonym.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0.qualifier"
          unpack="false"/>
 
 </feature>

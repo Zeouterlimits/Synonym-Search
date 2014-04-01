@@ -39,19 +39,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<artifactId>gson</artifactId>
 		<version>2.2.4</version>
 	</dependency>
-	
-	<dependency>
-		<groupId>org.apache.commons</groupId>
-		<artifactId>commons-lang3</artifactId>
-		<version>3.1</version>
-	</dependency>
-            
-            
-<!-- 	<dependency> -->
-<!-- 		<groupId>org.eclipse.search</groupId> -->
-<!-- 		<artifactId>org.eclipse.search</artifactId> -->
-<!-- 		<version>3.9.0</version> -->
-<!--     </dependency> -->
             
   </dependencies>
   
@@ -69,4 +56,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	</repository>
   </repositories>
   
+	 <name>Synonym Search Plugin</name>
+	 <organization>
+	 	<name>CSIS</name>
+	 </organization>
 </project> 

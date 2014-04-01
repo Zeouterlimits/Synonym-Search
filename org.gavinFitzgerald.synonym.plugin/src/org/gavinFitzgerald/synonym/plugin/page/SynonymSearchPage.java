@@ -862,7 +862,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 			    StringBuilder selectedSynonymBuilder = new StringBuilder();
 				
 				for(String synonym : selectedSynonyms) {
-					
 					selectedSynonymBuilder.append(synonym); 
 					selectedSynonymBuilder.append(SEARCH_TERM_SEPARATOR);
 				}
@@ -878,13 +877,6 @@ public class SynonymSearchPage extends DialogPage implements ISearchPage  //Text
 				ISearchQuery query = TextSearchQueryProvider.getPreferred().createQuery(input);
 				NewSearchUI.runQueryInBackground(query);
 				
-				//return 
-				
-				if (selectedSynonyms.size() > 0) {
-					MessageDialog.openInformation(getShell(), "Synonym Search", "You Searched for: " + selectedSynonyms.toString());
-				} else {
-					//TODO: Show no synonyms found screen ?
-				}
 				return true;
 			} 
 		} catch (Exception e) {
